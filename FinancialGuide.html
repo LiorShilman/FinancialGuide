@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדריך פיננסי מקיף</title>
+    <style>
+        :root {
+            /* Light mode variables */
+            --primary-color-light: mediumseagreen;
+            --secondary-color-light: darkblue;
+            --accent-color-light: #e74c3c;
+            --background-color-light: aquamarine;
+            --text-color-light: currentColor;
+            --card-bg-light: mediumspringgreen;
+            
+            /* Dark mode variables */
+            --primary-color-dark: #1a252f;
+            --secondary-color-dark: #2980b9;
+            --accent-color-dark: #c0392b;
+            --background-color-dark: #121212;
+            --text-color-dark: #e0e0e0;
+            --card-bg-dark: #1e1e1e;
+        }
+
+        [data-theme="light"] {
+            --primary-color: var(--primary-color-light);
+            --secondary-color: var(--secondary-color-light);
+            --accent-color: var(--accent-color-light);
+            --background-color: var(--background-color-light);
+            --text-color: var(--text-color-light);
+            --card-bg: var(--card-bg-light);
+			--highlight-bg: var(--card-bg-light);      /* mediumspringgreen */
+			--highlight-text: var(--text-color-light);  /* currentColor */
+			--highlight-border: var(--primary-color-light); /* mediumseagreen */
+			--highlight-accent: var(--accent-color-light); /* #e74c3c */
+        }
+
+        [data-theme="dark"] {
+            --primary-color: var(--primary-color-dark);
+            --secondary-color: var(--secondary-color-dark);
+            --accent-color: var(--accent-color-dark);
+            --background-color: var(--background-color-dark);
+            --text-color: var(--text-color-dark);
+            --card-bg: var(--card-bg-dark);
+			--highlight-bg: var(--card-bg-dark);       /* #1e1e1e */
+			--highlight-text: var(--text-color-dark);   /* #e0e0e0 */
+			--highlight-border: var(--primary-color-dark); /* #1a252f */
+			--highlight-accent: var(--accent-color-dark); /* #c0392b */
+        }
+		
+		[data-theme="light"] .highlight-item {
+			background: mediumspringgreen;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+
+		[data-theme="dark"] .highlight-item {
+			background: #1e1e1e;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+		}
+	
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--secondary-color);
+            color: aqua;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-switch:hover {
+            background: var(--accent-color);
+        }
+
+        header h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h2 .icon {
+            margin-left: 10px;
+            color: var(--accent-color);
+        }
+
+        .card ul {
+            list-style-type: none;
+        }
+
+        .card li {
+            margin-bottom: 0.8rem;
+            padding-right: 1.5rem;
+            position: relative;
+        }
+
+        .card li::before {
+            content: "✔";
+            color: var(--accent-color);
+            position: absolute;
+            right: 0;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 100%;
+            max-width: 500px;
+            padding: 1rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        #searchInput:focus {
+            border-color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .highlight {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+		
+        /* תוספת סגנונות למחשבונים */
+        .calculator {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .calculator input {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .calculator button {
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .calculator button:hover {
+            background: var(--accent-color);
+        }
+		
+		.glossary-category {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            background: var(--background-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .glossary-category:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .glossary-category.active {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .glossary-section {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+		
+
+        /* סגנונות למילון מושגים */
+        .glossary-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .glossary-term {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        /* תפריט ניווט */
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .nav-tab {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .nav-tab.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+		/* סגנונות להדגשה */
+		.highlight-item {
+			background: var(--card-bg);
+			border-right: 4px solid var(--accent-color);
+			margin: 10px 0;
+			padding: 12px;
+			border-radius: 8px;
+			transition: all 0.3s ease;
+		}
+	
+		.highlight-content {
+			font-weight: bold;
+			line-height: 1.5;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.highlight-note {
+			font-size: 0.9em;
+			color: var(--accent-color);
+			padding: 4px 8px;
+			border-radius: 4px;
+			margin-right: 10px;
+		}
+
+		/* הוספת אנימציה בהובר */
+		.highlight-item:hover {
+			transform: translateX(-5px);
+			border-right-width: 6px;
+		}
+		
+		.highlighted-list {
+			list-style: none;
+			padding: 0;
+		}
+
+		.highlighted-list li {
+			position: relative;
+			padding: 8px 25px 8px 5px;
+			margin: 8px 0;
+		}
+
+		[data-theme="light"] .highlighted-list li::before {
+			content: "✓";
+			position: absolute;
+			right: 0;
+			color: #000;
+		}
+
+		[data-theme="dark"] .highlighted-list li::before {
+			content: "✓";
+			position: absolute;
+			right: 0;
+			color: aqua;
+		}
+	
+
+		.highlight-markers {
+			margin-top: 5px;
+		}
+
+		.star {
+			color: #FFD700;
+			margin-left: 5px;
+		}
+
+		.key-badge {
+			background-color: #FF9999;
+			color: black;
+			padding: 2px 8px;
+			border-radius: 12px;
+			font-size: 0.9em;
+			display: inline-block;
+		}
+
+		h2 {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+    </style>
+</head>
+<body data-theme="light">
+    <button class="theme-switch">החלף מצב תצוגה</button>
+    <header>
+        <div class="container">
+            <h1>מדריך פיננסי מקיף</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="חיפוש מידע...">
+            </div>
+			<div class="nav-tabs">
+				<div class="nav-tab active">מדריכים</div>
+				<div class="nav-tab">מחשבונים</div>
+				<div class="nav-tab">מילון מושגים</div>
+			</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="grid">
+            <div class="card">
+				<h2>
+					<span class="icon" style="font-size: 28px;">💰</span>
+					יסודות התקצוב
+				</h2>
+				<ul class="highlighted-list">
+					<li>
+						<strong>יצירת תקציב חודשי וחלוקת משאבים פיננסיים</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>פיתוח אסטרטגיות חיסכון והתאמת הקטגוריות</li>
+					<li>צמצום הוצאות מיותרות ותכנון חכם של השקעות</li>
+					<li>תכנון פיננסי משפחתי והמלצה על אפליקציות</li>
+				</ul>
+            </div>
+
+            <div class="card"> 
+				<h2>
+					<span class="icon" style="font-size: 28px;">💰</span>
+					טיפים לחיסכון
+				</h2>
+				<ul class="highlighted-list">
+					<li>המלצה על חשבונות חיסכון עם תשואה גבוהה ואפשרויות להחזרי מזומן</li>
+					<li>הפחתת חשבונות שירות וחיסכון בהוצאות יומיות</li>
+					<li>
+						<strong>קביעת מטרות חיסכון ברורות ושיפור הרגלי צרכנות</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>ייעול רכישת מזון, הפחתת עלויות ביטוח ומנויים</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📈</span>
+					אסטרטגיות השקעה
+				</h2>
+				<ul class="highlighted-list">
+					<li>הבנת יסודות שוק המניות ובחירת השקעות למתחילים</li>
+					<li>השוואה בין איגרות חוב למניות והמלצה על קרנות מחקות</li>
+					<li>
+						<strong>ניתוח תיקי השקעה, הערכת סיכון והשקעה בקרנות נאמנות</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>היכרות עם השקעות אלטרנטיביות, כולל קריפטו ונדל"ן</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					ניהול חובות
+				</h2>
+				<ul class="highlighted-list">
+					<li>
+						<strong>תכנון אסטרטגי לפירעון חובות והפחתת שיעורי הריבית</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>המלצות לאיחוד חובות ושיפור דירוג האשראי</li>
+					<li>שימוש בשיטות כדוגמת "snowball" ו-"avalanche" להורדת חובות</li>
+					<li>הבנת הלוואות סטודנטים, פשיטת רגל וייעוץ פיננסי</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					תכנון מס
+				</h2>
+				<ul class="highlighted-list">
+					<li>ניצול הטבות מס ותרומות צדקה</li>
+					<li>הפחתת חבות המס באמצעות זיכויים וניכויים</li>
+					<li>
+						<strong>תכנון מס לעובדים עצמאים, כולל ניתוח השלכות המס</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>הכנה לעונת הדיווח והתמודדות עם חוקים פיננסיים</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					תכנון פרישה
+				</h2>
+				<ul class="highlighted-list">
+					<li>
+						<strong>חישוב צרכי הפרישה והכרת אפשרויות חסכון</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>ייעוץ על השקעות לטווח ארוך והערכת קצבאות</li>
+					<li>דיון בביטוחים לפרישה, תכנון צוואות וירושות</li>
+					<li>אסטרטגיות לבניית תיק פנסיוני מאוזן</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					עקרונות ביטוח
+				</h2>
+				<ul class="highlighted-list">
+					<li>
+						<strong>השוואת פוליסות ביטוח בריאות, חיים ונכסים</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>ניתוח פוליסות נסיעות וביטוחי נכות</li>
+					<li>מדריך לביטוח לעסקים והתאמת כיסויים</li>
+					<li>הבנת זכויות וחובות בתביעות ביטוח</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					הצבת יעדים פיננסיים
+				</h2>
+				<ul class="highlighted-list">
+					<li>
+						<strong>הגדרת מטרות פיננסיות חכמות (SMART Goals)</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>תכנון רכישות גדולות וניהול הוצאות</li>
+					<li>מעקב אחר התקדמות והתאמת יעדים</li>
+					<li>חגיגת הישגים והצבת אתגרים חדשים</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					חינוך פיננסי
+				</h2>
+				<ul class="highlighted-list">
+					<li>המלצה על קורסים פיננסיים ופודקאסטים</li>
+					<li>לימוד מושגים כלכליים ועקרונות ניהול הון</li>
+					<li>ניתוח מגמות שוק ומתן כלים להבנת השקעות</li>
+					<li>
+						<strong>פיתוח אוריינות פיננסית ומיומנויות ניהול כספים</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					הכנסות צדדיות והכנסה פאסיבית
+				</h2>
+				<ul class="highlighted-list">
+					<li>הדרכה על הכנסות פסיביות והוצאה לאור דיגיטלית</li>
+					<li>רעיונות לעסקים צדדיים ושיווק שותפים</li>
+					<li>יצירת מקורות הכנסה מרחוק ונישות רווחיות</li>
+					<li>
+						<strong>בניית תזרים הכנסות מגוון ויציב</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					עצמאות פיננסית
+				</h2>
+				<ul class="highlighted-list">
+					<li>דיון בתנועת FIRE (חירות פיננסית ופרישה מוקדמת)</li>
+					<li>
+						<strong>אסטרטגיות בניית עושר והשקעות לטווח ארוך</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>חינוך פיננסי לשינוי תפיסה כלכלית</li>
+					<li>תכנון ויישום יעדי פרישה מוקדמת</li>
+				</ul>
+            </div>
+
+            <div class="card">
+                <h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					ניהול סיכונים פיננסיים
+				</h2>
+				<ul class="highlighted-list">
+					<li>
+						<strong>זיהוי סיכונים פוטנציאליים ודיברוס תיק השקעות</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>הדרכה על גידור סיכונים והשקעות במתכות יקרות</li>
+					<li>הבנת השלכות עליות הריבית וניהול נזילות פיננסית</li>
+					<li>תכנון תרחישי קיצון והיערכות למשברים כלכליים</li>
+				</ul>
+            </div>
+			
+			<!-- קטגוריה חדשה: כלכלת משפחה -->
+			<div class="card">
+				<h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					כלכלת משפחה
+				</h2>
+				<ul class="highlighted-list">
+					<li>ניהול תקציב משפחתי משותף וחלוקת הוצאות</li>
+					<li>
+						<strong>תכנון ארוך טווח לחינוך ילדים וחסכונות</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>איזון בין צרכים אישיים ומשפחתיים</li>
+					<li>ניהול משברים פיננסיים משפחתיים</li>
+				</ul>
+			</div>
+
+			<!-- קטגוריה חדשה: התמודדות עם אינפלציה -->
+			<div class="card">
+				<h2>
+					<span class="icon" style="font-size: 28px;">📌</span>
+					התמודדות עם אינפלציה
+				</h2>
+				<ul class="highlighted-list">
+					<li>
+						<strong>אסטרטגיות להגנה על הכסף בתקופת אינפלציה</strong>
+						<div class="highlight-markers">
+							<span class="star">⭐</span>
+							<span class="key-badge">משפט מפתח</span>
+						</div>
+					</li>
+					<li>השקעות מומלצות להתמודדות עם עליית מחירים</li>
+					<li>התאמת תקציב למציאות משתנה</li>
+					<li>ניהול משכורת והשקעות בתקופת יוקר</li>
+				</ul>
+			</div>
+		
+			<!-- מחשבונים פיננסיים -->
+			<div class="calculator hidden">
+				<h2>מחשבון החזר משכנתא</h2>
+				<input type="number" id="loanAmount" placeholder="סכום ההלוואה">
+				<input type="number" id="interestRate" placeholder="ריבית שנתית (%)">
+				<input type="number" id="loanTerm" placeholder="תקופת ההלוואה בשנים">
+				<button onclick="calculateMortgage()">חשב</button>
+				<div id="mortgageResult"></div>
+			</div>
+
+			<div class="calculator hidden">
+				<h2>מחשבון חיסכון פנסיוני</h2>
+				<input type="number" id="initialAmount" placeholder="סכום התחלתי">
+				<input type="number" id="monthlyContribution" placeholder="הפקדה חודשית">
+				<input type="number" id="yearsToRetirement" placeholder="שנים עד פרישה">
+				<input type="number" id="expectedReturn" placeholder="תשואה שנתית צפויה (%)">
+				<button onclick="calculateRetirement()">חשב</button>
+				<div id="retirementResult"></div>
+			</div>
+		
+			<!-- מילון מושגים פיננסיים -->
+			<div class="glossary hidden">
+				<div class="glossary-categories">
+					<button class="glossary-category active">כללי</button>
+					<button class="glossary-category">השקעות</button>
+					<button class="glossary-category">משכנתאות</button>
+					<button class="glossary-category">ביטוח</button>
+					<button class="glossary-category">שוק ההון</button>
+				</div>
+
+				<!-- מושגים כלליים -->
+				<div class="glossary-section" data-category="כללי">
+					<div class="glossary-item">
+						<div class="glossary-term">ריבית דריבית</div>
+						<div class="glossary-definition">תהליך בו הריבית מתווספת לקרן ההשקעה ומייצרת ריבית נוספת על הסכום המצטבר. למשל, השקעה של 1000 ₪ בריבית של 10% תניב 100 ₪ בשנה הראשונה, ובשנה השנייה הריבית תחושב על 110 ₪.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">אינפלציה</div>
+						<div class="glossary-definition">עלייה כללית במחירי המוצרים והשירותים במשק לאורך זמן. נמדדת באמצעות מדד המחירים לצרכן ומשפיעה על כוח הקנייה של הכסף.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">תקציב</div>
+						<div class="glossary-definition">תכנית פיננסית המפרטת את ההכנסות וההוצאות הצפויות בתקופה מסוימת. כלי חיוני לניהול פיננסי אחראי.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">הכנסה פסיבית</div>
+						<div class="glossary-definition">הכנסה שאינה דורשת מעורבות פעילה יומיומית, כגון הכנסה מהשכרת נכס, תמלוגים או דיבידנדים מהשקעות.</div>
+					</div>
+				</div>
+
+				<!-- מושגי השקעות -->
+				<div class="glossary-section hidden" data-category="השקעות">
+					<div class="glossary-item">
+						<div class="glossary-term">דיברסיפיקציה</div>
+						<div class="glossary-definition">פיזור השקעות בין נכסים שונים להקטנת הסיכון. למשל, השקעה במניות, אגרות חוב, נדל"ן ומט"ח במקביל.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">תיק השקעות</div>
+						<div class="glossary-definition">אוסף של נכסים פיננסיים שונים המוחזקים על ידי משקיע. יכול לכלול מניות, אגרות חוב, קרנות נאמנות ונכסים נוספים.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">תשואה</div>
+						<div class="glossary-definition">הרווח או ההפסד על השקעה, מבוטא באחוזים. מחושב כשינוי בערך ההשקעה חלקי ערך ההשקעה המקורי.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">קרן נאמנות</div>
+						<div class="glossary-definition">כלי השקעה המאגד כספים ממספר משקיעים ומנוהל על ידי מנהל השקעות מקצועי.</div>
+					</div>
+				</div>
+
+				<!-- מושגי משכנתאות -->
+				<div class="glossary-section hidden" data-category="משכנתאות">
+					<div class="glossary-item">
+						<div class="glossary-term">ריבית משתנה</div>
+						<div class="glossary-definition">ריבית שמשתנה לאורך תקופת ההלוואה בהתאם לתנאי השוק. יכולה לעלות או לרדת.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">ריבית קבועה</div>
+						<div class="glossary-definition">ריבית שנשארת קבועה לאורך כל תקופת ההלוואה, ללא קשר לשינויים בשוק.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">לוח שפיצר</div>
+						<div class="glossary-definition">לוח סילוקין נפוץ במשכנתאות, בו התשלום החודשי נשאר קבוע לאורך כל תקופת ההלוואה.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">LTV</div>
+						<div class="glossary-definition">יחס המימון (Loan to Value) - היחס בין גובה ההלוואה לשווי הנכס. משפיע על תנאי המשכנתא.</div>
+					</div>
+				</div>
+
+				<!-- מושגי ביטוח -->
+				<div class="glossary-section hidden" data-category="ביטוח">
+					<div class="glossary-item">
+						<div class="glossary-term">פרמיה</div>
+						<div class="glossary-definition">התשלום התקופתי עבור פוליסת ביטוח. גובה הפרמיה נקבע לפי רמת הסיכון והכיסוי הביטוחי.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">השתתפות עצמית</div>
+						<div class="glossary-definition">הסכום שהמבוטח משלם מכיסו בעת תביעה, לפני שהביטוח מכסה את שאר הסכום.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">ביטוח משכנתא</div>
+						<div class="glossary-definition">ביטוח חיים המבטיח את פירעון המשכנתא במקרה של פטירה או אובדן כושר עבודה.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">תקופת אכשרה</div>
+						<div class="glossary-definition">תקופת המתנה מתחילת הביטוח ועד שניתן להגיש תביעה. נפוץ בביטוחי בריאות.</div>
+					</div>
+				</div>
+
+				<!-- מושגי שוק ההון -->
+				<div class="glossary-section hidden" data-category="שוק ההון">
+					<div class="glossary-item">
+						<div class="glossary-term">מדד ת"א 35</div>
+						<div class="glossary-definition">מדד המניות המוביל בבורסה בתל אביב, הכולל את 35 החברות הגדולות ביותר.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">דיבידנד</div>
+						<div class="glossary-definition">חלוקת רווחים של חברה לבעלי מניותיה. יכול להיות מחולק במזומן או במניות.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">אג"ח</div>
+						<div class="glossary-definition">איגרת חוב - כלי השקעה המייצג הלוואה לחברה או ממשלה, עם תשואה והחזר קרן מובטחים.</div>
+					</div>
+					<div class="glossary-item">
+						<div class="glossary-term">מסחר בחסר</div>
+						<div class="glossary-definition">אסטרטגיית מסחר בה המשקיע מוכר נכס שאינו בבעלותו בציפייה לירידת מחיר.</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const cards = document.querySelectorAll('.card');
+            const themeSwitch = document.querySelector('.theme-switch');
+            
+            // Theme Switching Logic
+            themeSwitch.addEventListener('click', function() {
+                const body = document.body;
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Update button text
+                this.textContent = newTheme === 'light' ? 'מצב כהה' : 'מצב בהיר';
+            });
+
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            themeSwitch.textContent = savedTheme === 'light' ? 'מצב כהה' : 'מצב בהיר';
+
+            // Search functionality
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+
+                cards.forEach(card => {
+                    const content = card.textContent.toLowerCase();
+                    const shouldShow = content.includes(searchTerm);
+                    
+                    card.classList.toggle('hidden', !shouldShow);
+
+                    // Remove existing highlights
+                    card.innerHTML = card.innerHTML.replace(/<mark class="highlight">(.*?)<\/mark>/g, '$1');
+
+                    // Add new highlights if there's a search term
+                    if (searchTerm && shouldShow) {
+                        highlightText(card, searchTerm);
+                    }
+                });
+            });
+
+            // Simpler and more efficient text highlighting function
+            function highlightText(element, searchTerm) {
+                const innerHTML = element.innerHTML;
+                const index = innerHTML.toLowerCase().indexOf(searchTerm.toLowerCase());
+                
+                if (index >= 0) {
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    element.innerHTML = innerHTML.replace(regex, '<mark class="highlight">$1</mark>');
+                }
+            }
+
+            // Card hover effects
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add smooth scrolling for better UX
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+			
+			// ניווט בין הלשוניות
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const content = {
+                'מדריכים': document.querySelectorAll('.card'),
+                'מחשבונים': document.querySelectorAll('.calculator'),
+                'מילון מושגים': document.querySelectorAll('.glossary')
+            };
+
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // הסרת הסימון הפעיל מכל הלשוניות
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    // הוספת סימון פעיל ללשונית הנוכחית
+                    tab.classList.add('active');
+
+                    // הסתרת כל התוכן
+                    Object.values(content).forEach(elements => {
+                        elements.forEach(el => el.classList.add('hidden'));
+                    });
+
+                    // הצגת התוכן הרלוונטי
+                    content[tab.textContent].forEach(el => el.classList.remove('hidden'));
+                });
+            });
+
+            // פונקציות למחשבונים
+            window.calculateMortgage = function() {
+                const amount = parseFloat(document.getElementById('loanAmount').value);
+                const rate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+                const term = parseFloat(document.getElementById('loanTerm').value) * 12;
+
+                if (amount && rate && term) {
+                    const monthlyPayment = amount * (rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
+                    document.getElementById('mortgageResult').innerHTML = 
+                        `תשלום חודשי משוער: ${monthlyPayment.toFixed(2)} ₪`;
+                }
+            };
+
+            window.calculateRetirement = function() {
+                const initial = parseFloat(document.getElementById('initialAmount').value) || 0;
+                const monthly = parseFloat(document.getElementById('monthlyContribution').value);
+                const years = parseFloat(document.getElementById('yearsToRetirement').value);
+                const return_rate = parseFloat(document.getElementById('expectedReturn').value) / 100;
+
+                if (years && return_rate && (initial > 0 || monthly > 0)) {
+                    const months = years * 12;
+                    const monthly_rate = return_rate / 12;
+                    
+                    // חישוב הסכום ההתחלתי עם ריבית דריבית
+                    const initial_future_value = initial * Math.pow(1 + monthly_rate, months);
+                    
+                    // חישוב ההפקדות החודשיות עם ריבית דריבית
+                    const monthly_future_value = monthly ? 
+                        monthly * ((Math.pow(1 + monthly_rate, months) - 1) / monthly_rate) : 0;
+                    
+                    // הסכום הכולל
+                    const total_future_value = initial_future_value + monthly_future_value;
+                    
+                    document.getElementById('retirementResult').innerHTML = 
+                        `סכום צפוי בפרישה: ${total_future_value.toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪<br>
+                        <small>
+                            מתוכו:<br>
+                            - מהסכום ההתחלתי: ${initial_future_value.toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪<br>
+                            - מההפקדות החודשיות: ${monthly_future_value.toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
+                        </small>`;
+                }
+            };
+
+            // ניהול קטגוריות במילון המושגים
+            const glossaryCategories = document.querySelectorAll('.glossary-category');
+            const glossarySections = document.querySelectorAll('.glossary-section');
+
+            glossaryCategories.forEach(category => {
+                category.addEventListener('click', () => {
+                    // הסרת הסימון הפעיל מכל הקטגוריות
+                    glossaryCategories.forEach(c => c.classList.remove('active'));
+                    // הוספת סימון פעיל לקטגוריה הנוכחית
+                    category.classList.add('active');
+
+                    // הסתרת כל החלקים
+                    glossarySections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+
+                    // הצגת החלק הרלוונטי
+                    const targetSection = document.querySelector(`.glossary-section[data-category="${category.textContent}"]`);
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                    }
+                });
+            });
+			
+        });
+    </script>
+</body>
+</html>
